@@ -25,7 +25,7 @@ public class Time_tracker {
      */
     public static void main(String[] args) {
         //Users.getUsers();
-        TimeFrame tf = new TimeFrame();
+        UserFrame tf = new UserFrame();
         tf.setVisible(true);
 
         MysqlDataSource ds = getMySQLDataSource();

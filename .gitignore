@@ -86,8 +86,9 @@ nbproject/private/
 build/
 nbbuild/
 dist/
-//doc/
 nbdist/
+//doc/
+//test/
 nbactions.xml
 nb-configuration.xml
 
