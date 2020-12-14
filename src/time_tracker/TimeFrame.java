@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import static time_tracker.MDS.getMySQLDataSource;
 
 /**
@@ -64,67 +65,10 @@ public class TimeFrame extends javax.swing.JFrame {
         }
     }
 
-    /*private void getIds() {
-       String projectQuery = "SELECT * FROM projects";
-        try ( PreparedStatement pst = con.prepareStatement(projectQuery);  ResultSet rs = pst.executeQuery()) {
-
-            while (rs.next()) {
-                //String projectId = rs.getString(1);
-                int projectId = projectDropdown.getSelectedIndex();
-                //projectDropdown.addItem(rs.getString(2));
-            }
-        } catch (SQLException ex) {
-
-            Logger lgr = Logger.getLogger(MDS.class.getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }*/
-
-    /*public void insertQueryGetId(String query) {
-        Integer num = 0;
-        Integer result = -1;
-        try {
-            java.sql.Statement stmt = con.createStatement();
-            num = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                result = rs.getInt(1);
-            }
-            rs.close();
-
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            //errore = e.getMessage();
-            result = -1;
-        }
-        return result;
-    }*/
-
-    /*private int getLastId() {
-
-        int id = 0;
-
-        try {
-            PreparedStatement pst = con.prepareStatement("insert into time_frame (start_time, users_id, projects_id) values(?, ?, ?)", new String[]{"time_frame_id"});
-            pst.setString(1, "2020-12-10 08:00:00");
-            pst.setString(2, "3");
-            pst.setString(3, "1");
-
-            pst.executeUpdate();
-            ResultSet rs = pst.getGeneratedKeys();
-
-            if (rs.next()) {
-                id = rs.getInt(1);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return id;
-    }*/
+    /*private void timePicker() {
+    String[] times = {"06:00", "07:00", "08:00"};
+    pickTime.addItem(times)
+}*/
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -141,7 +85,6 @@ public class TimeFrame extends javax.swing.JFrame {
         projectDropdown = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         sTimeField = new javax.swing.JTextField();
-        sTimeBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         eTimeField = new javax.swing.JTextField();
         eTimeBtn = new javax.swing.JButton();
@@ -202,13 +145,6 @@ public class TimeFrame extends javax.swing.JFrame {
             }
         });
 
-        sTimeBtn.setText("Send");
-        sTimeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sTimeBtnActionPerformed(evt);
-            }
-        });
-
         jLabel4.setText("End Time (YYYY-MM-DD HH:MM:SS)");
 
         eTimeField.addActionListener(new java.awt.event.ActionListener() {
@@ -246,9 +182,7 @@ public class TimeFrame extends javax.swing.JFrame {
                             .addComponent(sTimeField)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sTimeBtn)
-                            .addComponent(eTimeBtn))))
+                        .addComponent(eTimeBtn)))
                 .addContainerGap(295, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -265,15 +199,14 @@ public class TimeFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sTimeBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eTimeBtn))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(sTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eTimeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -309,37 +242,32 @@ public class TimeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_sTimeFieldActionPerformed
 
-    private void sTimeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sTimeBtnActionPerformed
-        String updateSTime = "INSERT INTO time_frame(start_time, users_id, projects_id) VALUES (?, ?, ?)";
-        //String sTimeIn = sTimeField.getText();
-        //String uid = projectDropdown(rs.getString(2));
-        try ( PreparedStatement pst = con.prepareStatement(updateSTime);) {
-
-            pst.setString(1, sTimeField.getText());
-            //String userValue = userDropdown.getSelectedItem().toString();
-            int userId = userDropdown.getSelectedIndex() + 1;
-            pst.setInt(2, userId);
-            System.out.println(userId);
-            //String projectValue = projectDropdown.getSelectedItem().toString();
-            int projectId = projectDropdown.getSelectedIndex() + 1;
-            System.out.println(projectId);
-            pst.setInt(3, projectId);
-
-            pst.executeUpdate();
-
-        } catch (SQLException ex) {
-
-            Logger lgr = Logger.getLogger(MDS.class.getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }//GEN-LAST:event_sTimeBtnActionPerformed
-
     private void eTimeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eTimeFieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_eTimeFieldActionPerformed
 
     private void eTimeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eTimeBtnActionPerformed
-        // TODO add your handling code here:
+        if (sTimeField.getText().isEmpty() || eTimeField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Please Enter Start Time and End Time");
+        } else {
+            String updateSTime = "INSERT INTO time_frame(start_time, end_time, users_id, projects_id) VALUES (?, ?, ?, ?)";
+            try ( PreparedStatement pst = con.prepareStatement(updateSTime);) {
+
+                pst.setString(1, sTimeField.getText());
+                pst.setString(2, eTimeField.getText());
+                int userId = userDropdown.getSelectedIndex() + 1;
+                pst.setInt(3, userId);
+                int projectId = projectDropdown.getSelectedIndex() + 1;
+                pst.setInt(4, projectId);
+
+                pst.executeUpdate();
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(rootPane, "Please Enter Time As: YYYY-MM-DD HH:MM:SS");
+                Logger lgr = Logger.getLogger(MDS.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
     }//GEN-LAST:event_eTimeBtnActionPerformed
 
     /**
@@ -396,7 +324,6 @@ public class TimeFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JComboBox<String> projectDropdown;
-    private javax.swing.JButton sTimeBtn;
     private javax.swing.JTextField sTimeField;
     private javax.swing.JButton searchBtn;
     private javax.swing.JTextField searchField;
