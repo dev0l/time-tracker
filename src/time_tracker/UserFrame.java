@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
 import static time_tracker.MDS.getMySQLDataSource;
 
 /**
@@ -27,14 +28,17 @@ public class UserFrame extends javax.swing.JFrame {
 
     public UserFrame() {
         initComponents();
+
         ds = getMySQLDataSource();
         try {
             con = ds.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(UserFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         getUserDropdown();
         getProjectDropdown();
+        //updateUserTable();
     }
 
     private void getUserDropdown() {
@@ -65,6 +69,19 @@ public class UserFrame extends javax.swing.JFrame {
         }
     }
 
+    private void updateUserTable() {
+        String usersQuery = "SELECT * FROM users";
+        try ( PreparedStatement pst = con.prepareStatement(usersQuery);  ResultSet rs = pst.executeQuery()) {
+
+            userTable.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (SQLException ex) {
+
+            Logger lgr = Logger.getLogger(MDS.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -72,22 +89,38 @@ public class UserFrame extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         searchField = new javax.swing.JTextField();
         searchBtn = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        Edit = new javax.swing.JButton();
+        Save = new javax.swing.JButton();
+        Clear = new javax.swing.JButton();
         userDropdown = new javax.swing.JComboBox<>();
-        jLabel2 = new javax.swing.JLabel();
         projectDropdown = new javax.swing.JComboBox<>();
+        JTabbedPane1 = new javax.swing.JTabbedPane();
+        timeReport = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        uName = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        uEmail = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        sTimeField = new javax.swing.JTextField();
+        uStatus = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        sTimeField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         eTimeField = new javax.swing.JTextField();
-        eTimeBtn = new javax.swing.JButton();
+        insTimeBtn = new javax.swing.JButton();
+        projectReport = new javax.swing.JPanel();
+        overview = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        userTable = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        projectTable = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(800, 420));
 
         jToolBar1.setRollover(true);
 
@@ -111,28 +144,60 @@ public class UserFrame extends javax.swing.JFrame {
         });
         jToolBar1.add(searchBtn);
 
-        getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+        Edit.setText("Edit");
+        Edit.setFocusable(false);
+        Edit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        Edit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(Edit);
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setLabelFor(projectDropdown);
-        jLabel1.setText("User");
-        jLabel1.setToolTipText("User");
+        Save.setText("Save");
+        Save.setFocusable(false);
+        Save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        Save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(Save);
 
+        Clear.setText("Clear");
+        Clear.setFocusable(false);
+        Clear.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        Clear.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(Clear);
+
+        userDropdown.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select User" }));
         userDropdown.setToolTipText("User");
         userDropdown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 userDropdownActionPerformed(evt);
             }
         });
+        jToolBar1.add(userDropdown);
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setLabelFor(projectDropdown);
-        jLabel2.setText("Project");
-        jLabel2.setToolTipText("User");
-
+        projectDropdown.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Project" }));
         projectDropdown.setToolTipText("User");
+        projectDropdown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                projectDropdownActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(projectDropdown);
 
-        jLabel3.setText("Start Time (YYYY-MM-DD HH:MM:SS)");
+        getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+
+        jLabel1.setText("User:");
+
+        uName.setEditable(false);
+        uName.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel2.setText("Email:");
+
+        uEmail.setEditable(false);
+        uEmail.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel3.setText("Status:");
+
+        uStatus.setEditable(false);
+        uStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel4.setText("Start Time (YYYY-MM-DD HH:MM:SS)");
 
         sTimeField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +205,7 @@ public class UserFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("End Time (YYYY-MM-DD HH:MM:SS)");
+        jLabel5.setText("End Time (YYYY-MM-DD HH:MM:SS)");
 
         eTimeField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,67 +213,153 @@ public class UserFrame extends javax.swing.JFrame {
             }
         });
 
-        eTimeBtn.setText("Send");
-        eTimeBtn.addActionListener(new java.awt.event.ActionListener() {
+        insTimeBtn.setText("Send");
+        insTimeBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eTimeBtnActionPerformed(evt);
+                insTimeBtnActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout timeReportLayout = new javax.swing.GroupLayout(timeReport);
+        timeReport.setLayout(timeReportLayout);
+        timeReportLayout.setHorizontalGroup(
+            timeReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(timeReportLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(userDropdown, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(timeReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(timeReportLayout.createSequentialGroup()
+                        .addGroup(timeReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(timeReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sTimeField)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(eTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(projectDropdown, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(eTimeField)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sTimeField)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eTimeBtn)))
-                .addContainerGap(295, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(insTimeBtn))
+                    .addComponent(uName, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(uEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(uStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
+                .addContainerGap(495, Short.MAX_VALUE))
+        );
+        timeReportLayout.setVerticalGroup(
+            timeReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, timeReportLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(userDropdown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(projectDropdown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(uName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(uEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(uStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(timeReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(timeReportLayout.createSequentialGroup()
                         .addComponent(sTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eTimeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(insTimeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Time Report", jPanel2);
+        JTabbedPane1.addTab("Time Report", timeReport);
 
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
-        jTabbedPane1.getAccessibleContext().setAccessibleName("Report Time");
+        javax.swing.GroupLayout projectReportLayout = new javax.swing.GroupLayout(projectReport);
+        projectReport.setLayout(projectReportLayout);
+        projectReportLayout.setHorizontalGroup(
+            projectReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+        );
+        projectReportLayout.setVerticalGroup(
+            projectReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 335, Short.MAX_VALUE)
+        );
+
+        JTabbedPane1.addTab("Project Report", projectReport);
+
+        jLabel6.setText("User");
+
+        userTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        userTable.setPreferredSize(new java.awt.Dimension(550, 80));
+        jScrollPane3.setViewportView(userTable);
+
+        jLabel8.setText("Project");
+
+        projectTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        projectTable.setPreferredSize(new java.awt.Dimension(550, 80));
+        jScrollPane4.setViewportView(projectTable);
+
+        javax.swing.GroupLayout overviewLayout = new javax.swing.GroupLayout(overview);
+        overview.setLayout(overviewLayout);
+        overviewLayout.setHorizontalGroup(
+            overviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(overviewLayout.createSequentialGroup()
+                .addGroup(overviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(overviewLayout.createSequentialGroup()
+                        .addGap(244, 244, 244)
+                        .addGroup(overviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(overviewLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(0, 513, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overviewLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(overviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(overviewLayout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(527, 527, 527))
+                            .addComponent(jScrollPane3))))
+                .addContainerGap())
+        );
+        overviewLayout.setVerticalGroup(
+            overviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overviewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        JTabbedPane1.addTab("Overview", overview);
+
+        getContentPane().add(JTabbedPane1, java.awt.BorderLayout.CENTER);
+        JTabbedPane1.getAccessibleContext().setAccessibleName("Report Time");
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -226,12 +377,36 @@ public class UserFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_searchFieldActionPerformed
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        //System.out.println("id:" + getLastId());
+        if (searchField.getText().isEmpty()) {
+            updateUserTable();
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "You searched for " + searchField.getText());
+        }
     }//GEN-LAST:event_searchBtnActionPerformed
 
     private void userDropdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userDropdownActionPerformed
-        // TODO add your handling code here:
+        String userEmail = userDropdown.getSelectedItem().toString();
+        String userQuery = "SELECT * FROM users WHERE email = ?";
+        try ( PreparedStatement pst = con.prepareStatement(userQuery);) {
+
+            pst.setString(1, userEmail);
+            ResultSet rs = pst.executeQuery();
+
+            /*while (rs.next()) {
+
+            }*/
+            userTable.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (SQLException ex) {
+
+            Logger lgr = Logger.getLogger(MDS.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }//GEN-LAST:event_userDropdownActionPerformed
+
+    private void projectDropdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectDropdownActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_projectDropdownActionPerformed
 
     private void sTimeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sTimeFieldActionPerformed
         // TODO add your handling code here:
@@ -241,12 +416,14 @@ public class UserFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_eTimeFieldActionPerformed
 
-    private void eTimeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eTimeBtnActionPerformed
+    private void insTimeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insTimeBtnActionPerformed
         if (sTimeField.getText().isEmpty() || eTimeField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(rootPane, "Please Enter Start Time and End Time");
+        } else if (sTimeField.getText().equals(eTimeField.getText())) {
+            JOptionPane.showMessageDialog(rootPane, "Start -and End Time can not have the same value");
         } else {
-            String updateSTime = "INSERT INTO time_frame(start_time, end_time, users_id, projects_id) VALUES (?, ?, ?, ?)";
-            try ( PreparedStatement pst = con.prepareStatement(updateSTime);) {
+            String updateTimes = "INSERT INTO time_frame(start_time, end_time, users_id, projects_id) VALUES (?, ?, ?, ?)";
+            try ( PreparedStatement pst = con.prepareStatement(updateTimes);) {
 
                 pst.setString(1, sTimeField.getText());
                 pst.setString(2, eTimeField.getText());
@@ -257,13 +434,18 @@ public class UserFrame extends javax.swing.JFrame {
 
                 pst.executeUpdate();
 
+                JOptionPane.showMessageDialog(rootPane, "Time Reported");
+
+                sTimeField.setText("");
+                eTimeField.setText("");
+
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(rootPane, "Please Enter Time As: YYYY-MM-DD HH:MM:SS");
                 Logger lgr = Logger.getLogger(MDS.class.getName());
                 lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
-    }//GEN-LAST:event_eTimeBtnActionPerformed
+    }//GEN-LAST:event_insTimeBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -307,22 +489,37 @@ public class UserFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton eTimeBtn;
+    private javax.swing.JButton Clear;
+    private javax.swing.JButton Edit;
+    private javax.swing.JTabbedPane JTabbedPane1;
+    private javax.swing.JButton Save;
     private javax.swing.JTextField eTimeField;
+    private javax.swing.JButton insTimeBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JPanel overview;
     private javax.swing.JComboBox<String> projectDropdown;
+    private javax.swing.JPanel projectReport;
+    private javax.swing.JTable projectTable;
     private javax.swing.JTextField sTimeField;
     private javax.swing.JButton searchBtn;
     private javax.swing.JTextField searchField;
+    private javax.swing.JPanel timeReport;
+    private javax.swing.JTextField uEmail;
+    private javax.swing.JTextField uName;
+    private javax.swing.JTextField uStatus;
     private javax.swing.JComboBox<String> userDropdown;
+    private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }
