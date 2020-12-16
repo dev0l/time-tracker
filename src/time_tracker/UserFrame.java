@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -22,7 +23,6 @@ import static time_tracker.MDS.getMySQLDataSource;
  */
 public class UserFrame extends javax.swing.JFrame {
 
-    //MysqlDataSource ds = getMySQLDataSource();
     MysqlDataSource ds;
     Connection con;
 
@@ -38,7 +38,6 @@ public class UserFrame extends javax.swing.JFrame {
 
         getUserDropdown();
         getProjectDropdown();
-        //updateUserTable();
     }
 
     private void getUserDropdown() {
@@ -82,7 +81,7 @@ public class UserFrame extends javax.swing.JFrame {
         }
     }
 
-        private void updateProjectTable() {
+    private void updateProjectTable() {
         String projectsQuery = "SELECT * FROM projects";
         try ( PreparedStatement pst = con.prepareStatement(projectsQuery);  ResultSet rs = pst.executeQuery()) {
 
@@ -645,23 +644,30 @@ public class UserFrame extends javax.swing.JFrame {
 
     private void userDropdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userDropdownActionPerformed
         String userEmail = userDropdown.getSelectedItem().toString();
-        String userQuery = "SELECT u.*, s.us_name FROM user_status s INNER JOIN users u ON s.user_status_id = u.user_status_id WHERE email = ?";
+        String userQuery = "SELECT * FROM users, user_status, users_projects INNER JOIN projects ON projects.projects_id = users_projects.projects_id WHERE email = ?";
         try ( PreparedStatement pst = con.prepareStatement(userQuery);) {
 
             pst.setString(1, userEmail);
 
             ResultSet rs = pst.executeQuery();
-            //userTable.setModel(DbUtils.resultSetToTableModel(rs));
 
             while (rs.next()) {
-            uName.setText(rs.getString(2) +" "+ rs.getString(3));
-            uEmail.setText(rs.getString(4));
-            uStatus.setText(rs.getString("us_name"));
-            //uProjects.setText(rs.getString("project_name"));
-            
-            //userTable.setModel(DbUtils.resultSetToTableModel(rs));
+                uName.setText(rs.getString(2) + " " + rs.getString(3));
+                uEmail.setText(rs.getString(4));
+                uStatus.setText(rs.getString("us_name"));
+
+                /**
+                 * Failure to add all items in array - Need Fix
+                 */
+                String projectsArray[] = new String[]{rs.getString("project_name")};
+                System.out.println(Arrays.toString(projectsArray));
+                uProjects.setText(Arrays.toString(projectsArray));
+
+                /**
+                 * Failure to also populate userTable - Need Fix
+                 */
+                //userTable.setModel(DbUtils.resultSetToTableModel(rs));
             }
-            //userTable.setModel(DbUtils.resultSetToTableModel(rs));
 
         } catch (SQLException ex) {
 
